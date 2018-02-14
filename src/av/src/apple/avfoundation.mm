@@ -4,6 +4,12 @@
 #endif
 
 #include "scy/logger.h"
+
+// Undefining HAVE_FFMPEG avoids a conflict in the definition of AVMediaType between
+// FFmpeg and AVFoundation. This should be okay because FFmpeg is used in the DeviceManager
+// class declaration which we're not using below.
+#undef HAVE_FFMPEG
+
 #include "scy/av/devicemanager.h"
 
 #import <assert.h>

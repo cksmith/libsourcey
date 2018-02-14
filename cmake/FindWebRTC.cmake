@@ -159,6 +159,12 @@ if(WEBRTC_INCLUDE_DIR)
 
     # Enable libstdc++ debugging if you build WebRTC with `enable_iterator_debugging=true`
     # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_GLIBCXX_DEBUG=1")
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    add_definitions(-DWEBRTC_MAC -DWEBRTC_POSIX)
+    set(WEBRTC_DEPENDENCIES "-framework Foundation" "-framework CoreAudio" "-framework CoreVideo" "-framework CoreMedia" "-framework AudioToolbox" "-framework CoreGraphics" "-framework AVFoundation")
+    if(IOS)
+      add_definitions(-DWEBRTC_IOS)
+    endif()
   endif()
 
   # Add vendor include directories
