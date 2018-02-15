@@ -259,6 +259,8 @@ add_vendor_dependency(HTTPPARSER http_parser)
 
 # External dependencies
 if(WITH_WEBRTC)
+  hunter_add_package(webrtc-precompiled)
+  set(WEBRTC_ROOT ${WEBRTC-PRECOMPILED_ROOT})
   find_dependency(WebRTC REQUIRED)
 
   # We will be building with BoringSSL instead of OpenSSL
@@ -274,24 +276,29 @@ if(WITH_WEBRTC)
   find_path(OPENSSL_INCLUDE_DIR
     NAMES openssl/ssl.h
     PATHS
-      ${WEBRTC_ROOT_DIR}/third_party/boringssl/src/include
+      ${WEBRTC_INCLUDE_DIR}/third_party/boringssl/src/include
       ${WEBRTC_ROOT_DIR}/include/third_party/boringssl/src/include
     NO_DEFAULT_PATH)
   list(APPEND LibSourcey_VENDOR_INCLUDE_DIRS ${OPENSSL_INCLUDE_DIR})
 endif()
 if(WITH_OPENSSL)
+  hunter_add_package(OpenSSL)
   find_dependency(OpenSSL REQUIRED)
 endif()
 if(WITH_FFMPEG)
+  hunter_add_package(ffmpeg)
   find_dependency(FFmpeg REQUIRED)
 endif()
 if(WITH_OPENCV)
+  hunter_add_packge(OpenCV)
   find_dependency(OpenCV REQUIRED)
 endif()
 if(WITH_POCO)
+  hunter_add_package(PocoCpp)
   find_dependency(Poco REQUIRED Util XML CppParser Foundation)
 endif()
 if(WITH_WXWIDGETS)
+  hunter_add_package(wxWidgets)
   # TODO: specify required library options
   find_dependency(wxWidgets REQUIRED core base adv)
 endif()

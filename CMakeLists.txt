@@ -2,9 +2,9 @@
 # Root CMakeLists.txt file for LibSourcey
 # ============================================================================
 
-# CMake 2.8.10 or newer for other platforms.
+# CMake 3.0 or newer for other platforms.
 # This version is available via Ubuntu's package manager for the 14.04 LTS.
-cmake_minimum_required(VERSION 2.8.10)
+cmake_minimum_required(VERSION 3.0)
 
 # This must go before `project(LibSourcey)` in order to work.
 if(WIN32)
@@ -19,6 +19,13 @@ endif()
 
 # set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE)
 # set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${CMAKE_CONFIGURATION_TYPES})
+
+include("cmake/HunterGate.cmake")
+
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.20.5.tar.gz"
+    SHA1 "9f5eb722cbd9068f3d21a43b07832f8cc41336a1"
+)
 
 project(LibSourcey)
 

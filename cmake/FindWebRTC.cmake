@@ -28,6 +28,10 @@ set(WEBRTC_ROOT_DIR "" CACHE STRING "Where is the WebRTC root directory located?
 # set(WEBRTC_BUILD_DIR_SUFFIX_DEBUG "out/Debug" CACHE STRING "What is the WebRTC debug build directory suffix?")
 # set(WEBRTC_BUILD_DIR_SUFFIX_RELEASE "out/Release" CACHE STRING "What is the WebRTC release build directory suffix?")
 
+if(WEBRTC_ROOT_DIR STREQUAL "")
+  set(WEBRTC_ROOT_DIR ${WEBRTC_ROOT})
+endif()
+
 # ----------------------------------------------------------------------
 # Find WEBRTC include path
 # ----------------------------------------------------------------------
