@@ -43,11 +43,11 @@ MultiplexMediaCapturer::~MultiplexMediaCapturer()
 }
 
 
-void MultiplexMediaCapturer::openFile(const std::string& file, bool loop)
+void MultiplexMediaCapturer::openFile(const std::string& file, bool loop, bool emulateRealtime)
 {
     // Open the capture file
     _videoCapture->setLoopInput(loop);
-    _videoCapture->setRealtimePlayback(true);
+    _videoCapture->setRealtimePlayback(emulateRealtime);
     _videoCapture->openFile(file);
 
     // Set the output settings
