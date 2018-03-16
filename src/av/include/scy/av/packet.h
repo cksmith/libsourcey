@@ -109,6 +109,12 @@ struct AudioPacket : public MediaPacket
     {
     }
 
+    AudioPacket(const AudioPacket& r)
+        : MediaPacket(r)
+        , numSamples(r.numSamples)
+    {
+    }
+
     virtual ~AudioPacket() = default;
 
     virtual IPacket* clone() const override { return new AudioPacket(*this); }
@@ -125,12 +131,12 @@ struct AudioPacket : public MediaPacket
 /// Audio packet for planar formats
 struct PlanarAudioPacket : public AudioPacket
 {
-    uint8_t* buffer[4] = { nullptr };
+    uint8_t** buffer = nullptr;
     int linesize;
     int channels;
     std::string sampleFmt;
 
-    PlanarAudioPacket(uint8_t* data[4], int channels = 0, size_t numSamples = 0, //, size_t size = 0
+    PlanarAudioPacket(uint8_t** data, int channels = 0, size_t numSamples = 0, //, size_t size = 0
                       const std::string& sampleFmt = "", int64_t time = 0);
     PlanarAudioPacket(const PlanarAudioPacket& r);
     virtual ~PlanarAudioPacket();

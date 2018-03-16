@@ -33,7 +33,7 @@ namespace av {
 
 PlanarVideoPacket::PlanarVideoPacket(uint8_t* data[4], const int linesize[4], const std::string& pixelFmt,
                                      int width, int height, int64_t time)
-    : VideoPacket(data[0], 0, width, height, time)
+    : VideoPacket(0, 0, width, height, time)
     , pixelFmt(pixelFmt)
 {
     auto pixfmt = av_get_pix_fmt(pixelFmt.c_str());
@@ -56,7 +56,7 @@ PlanarVideoPacket::PlanarVideoPacket(const PlanarVideoPacket& r)
     auto pixfmt = av_get_pix_fmt(pixelFmt.c_str());
 
     // Allocate image where the data image will copied
-    _size = av_image_alloc((uint8_t**)r.buffer, (int*)r.linesize,
+    _size = av_image_alloc((uint8_t**)buffer, (int*)linesize,
         width, height, pixfmt, 1);
     if (_size < 0) {
         LError("Could not allocate raw video buffer");
@@ -74,7 +74,6 @@ PlanarVideoPacket::~PlanarVideoPacket()
 {
     if (_free) {
         av_freep(&buffer[0]);
-        av_freep(buffer);
     }
 }
 
@@ -84,9 +83,9 @@ PlanarVideoPacket::~PlanarVideoPacket()
 //
 
 
-PlanarAudioPacket::PlanarAudioPacket(uint8_t* data[4], int channels, size_t numSamples,
+PlanarAudioPacket::PlanarAudioPacket(uint8_t** data, int channels, size_t numSamples,
                                      const std::string& sampleFmt, int64_t time)
-    : AudioPacket(data[0], 0, numSamples, time)
+    : AudioPacket(0, 0, numSamples, time)
     , channels(channels)
     , sampleFmt(sampleFmt)
 {
@@ -95,9 +94,7 @@ PlanarAudioPacket::PlanarAudioPacket(uint8_t* data[4], int channels, size_t numS
 
     // The constructor does no copy any frame data.
     // The actual frame will not be copied unless this packet is cloned.
-    for (int i = 0; i < 4; ++i) {
-        this->buffer[i] = data[i];
-    }
+    this->buffer = data;
 }
 
 
@@ -108,6 +105,8 @@ PlanarAudioPacket::PlanarAudioPacket(const PlanarAudioPacket& r)
 {
     assert(!sampleFmt.empty() && "sample format required to copy");
     auto fmt = av_get_sample_fmt(sampleFmt.c_str());
+
+    _size = av_samples_get_buffer_size(&linesize, channels, (int)numSamples, fmt, 0);
 
     // Allocate image where the data image will copied
     int ret = av_samples_alloc_array_and_samples((uint8_t***)&buffer,
@@ -127,7 +126,7 @@ PlanarAudioPacket::~PlanarAudioPacket()
 {
     if (_free) {
         av_freep(&buffer[0]);
-        av_freep(buffer);
+        av_freep(&buffer);
     }
 }
 
